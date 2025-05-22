@@ -1,6 +1,51 @@
+
+import random 
+
 MAX_LINES = 3 # creating a global variable
 MAX_BET = 100
 MIN_BET = 4
+
+ROWS = 3
+COLS= 3
+
+symbol_count = {
+    "A" : 2,
+    "B" : 3,
+    "C" : 4,
+    "D" : 5
+}
+
+def slot_spin(rows, cols, symbols):
+    all_symbols = [] # created a list for all possible symbols
+    for symbol, symbol_count in symbols.items(): # symbol--> A,B,C,D symbol_count-->2,3,4,5
+        for _ in range(symbol_count):
+            all_symbols.append(symbol)
+    
+    columns = []
+    for _ in range(cols):
+        column = []
+        current_symbols = all_symbols[:] # the : helps to copy all_symbols to current_symbols
+        for row in range(rows):
+            value = random.choice(current_symbols)
+            current_symbols.remove(value) #removes the symbol just obtained from the list
+            column.append(value)
+            
+        columns.append(column)
+
+    return columns
+
+def print_slot(columns):
+    for row in range(len(columns[0])):
+        for i,column in enumerate(columns):
+            if i !=len(columns) -1:
+                print(column[row], end=" | " )
+            else:
+                print(column[row], end="")
+        print() # prints new line like \n after a row
+            
+
+
+
 
 
 def depo():
@@ -57,6 +102,9 @@ def main():
     print(f"You are betting ${total_bet} in total")
     balance = balance - total_bet
     print(f"Balance remaining: ${balance}")
+
+    slots = slot_spin(ROWS , COLS , symbol_count)
+    print_slot(slots)
 
 
 
