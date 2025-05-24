@@ -8,11 +8,18 @@ MIN_BET = 4
 ROWS = 3
 COLS= 3
 
-symbol_count = {
-    "A" : 2,
-    "B" : 3,
-    "C" : 4,
-    "D" : 5
+symbol_count = { # no of digits present for each symbol
+    "A" : 3,
+    "B" : 4,
+    "C" : 5,
+    "D" : 6
+}
+
+symbol_value = { # value won by getting each symbol 3 in a row
+    "A" : 6,
+    "B" : 5,
+    "C" : 3,
+    "D" : 2
 }
 
 def slot_spin(rows, cols, symbols):
@@ -42,11 +49,28 @@ def print_slot(columns):
             else:
                 print(column[row], end="")
         print() # prints new line like \n after a row
+
+
+
+def check_winnings(columns,lines,bet,values):
+    winnings = 0
+    winning_line = []
+    for line in range(lines):
+        symbol = columns[0][line]
+        for column in columns:
+            symbol_check = column[line]
+            if symbol != symbol_check:
+                break
+        else: # else for - for loop - ??
+            winnings += values[symbol] * bet
+            winning_line.append(line+1)
+
+    return winnings, winning_line
+    
+
+
+
             
-
-
-
-
 
 def depo():
     while True:
@@ -86,10 +110,7 @@ def get_bet():
         else:
             print("Please Enter a NUMBER!")
     
-
-
-def main():
-    balance = depo()
+def game(balance):
     lines = get_no_lines()
     while True:
         bet = get_bet()
@@ -105,10 +126,19 @@ def main():
 
     slots = slot_spin(ROWS , COLS , symbol_count)
     print_slot(slots)
+    winnings, winning_lines = check_winnings(slots, lines, bet , symbol_value)
+    print(f"you won ${winnings}")
+    print(f"You won on lines: ", *winning_lines )
+    return winnings - total_bet
 
 
-
-
-
-
+def main():
+    balance = depo()
+    while True:
+        print(f"Current balance is ${balance}")
+        reply= input("Press enter to spin.(q to quit)")
+        if reply == "q":
+            break
+        balance += game(balance)
+    
 main()
